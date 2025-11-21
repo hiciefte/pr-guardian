@@ -55,14 +55,13 @@ class GitHubClient:
             )
 
     def _run_gh_command(
-        self, args: list[str], check: bool = True
+        self, args: list[str]
     ) -> subprocess.CompletedProcess:
         """
         Execute a gh CLI command.
 
         Args:
             args: Command arguments (without 'gh' prefix)
-            check: Whether to raise on non-zero exit code
 
         Returns:
             CompletedProcess with stdout/stderr
@@ -70,7 +69,7 @@ class GitHubClient:
         Raises:
             GitHubAPIError: On command failure
         """
-        cmd = ["gh"] + args
+        cmd = ["gh", *args]
         logger.debug(f"Running gh command: {' '.join(cmd)}")
 
         env = os.environ.copy()
@@ -84,12 +83,12 @@ class GitHubClient:
                 env=env,
                 timeout=60,
             )
-        except subprocess.TimeoutExpired:
+        except subprocess.TimeoutExpired as err:
             raise GitHubAPIError(
                 "GitHub CLI command timed out",
                 error_type="timeout",
                 retryable=True,
-            )
+            ) from err
 
         if result.returncode != 0:
             error_info = self._parse_gh_error(result.returncode, result.stderr)

@@ -240,14 +240,14 @@ class LLMParser:
                 logger.warning(f"Rate limited (attempt {attempt + 1}): {e}")
                 await asyncio.sleep(2 ** attempt)
 
-            except anthropic.APIError as e:
-                logger.error(f"API error (attempt {attempt + 1}): {e}")
+            except anthropic.APIError:
+                logger.exception(f"API error (attempt {attempt + 1})")
                 if attempt == self.max_retries - 1:
                     self.circuit_breaker.record_failure()
                 await asyncio.sleep(1)
 
-            except Exception as e:
-                logger.error(f"Unexpected error parsing comment: {e}")
+            except Exception:
+                logger.exception("Unexpected error parsing comment")
                 self.circuit_breaker.record_failure()
                 return None
 

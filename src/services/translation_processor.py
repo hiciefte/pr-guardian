@@ -87,8 +87,8 @@ def apply_translation_change(
         )
         return True
 
-    except Exception as e:
-        logger.error(f"Failed to apply change to {file_path}: {e}")
+    except Exception:
+        logger.exception(f"Failed to apply change to {file_path}")
         return False
 
 
@@ -286,8 +286,8 @@ def preview_change(
             ),
         }
 
-    except Exception as e:
-        logger.error(f"Failed to preview change: {e}")
+    except Exception:
+        logger.exception("Failed to preview change")
         return None
 
 

@@ -41,7 +41,7 @@ class GitHubSettings(BaseModel):
         """Validate GitHub username format."""
         if not v or not v.strip():
             raise ValueError("target_username cannot be empty")
-        return v
+        return v.strip()
 
 
 class FeedbackSettings(BaseModel):
@@ -59,9 +59,12 @@ class FeedbackSettings(BaseModel):
     @classmethod
     def validate_repository(cls, v: Optional[str]) -> Optional[str]:
         """Validate repository format."""
-        if v is not None and "/" not in v:
-            raise ValueError(f"Invalid repository format: {v} (expected: owner/repository)")
-        return v
+        if v is None:
+            return None
+        value = v.strip()
+        if "/" not in value:
+            raise ValueError("Invalid repository format (expected: owner/repository)")
+        return value
 
 
 class ExecutionSettings(BaseModel):

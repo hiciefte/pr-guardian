@@ -176,7 +176,7 @@ def _format_commits_section(commit_results: list[dict[str, Any]]) -> str:
     lines = ["### Commits Created\n"]
 
     for i, commit in enumerate(commit_results, 1):
-        sha = commit.get("sha", "unknown")[:7]
+        sha = str(commit.get("sha", "unknown"))[:7]
         message = commit.get("message", "No message")
         # Truncate long messages
         if len(message) > 80:

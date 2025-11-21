@@ -9,7 +9,7 @@ PLACEHOLDER_PATTERNS = [
     r'%[sd]',                        # %s, %d (printf-style)
     r'\$\{[a-zA-Z0-9_]+\}',         # ${variable}
     r'%\([a-zA-Z0-9_]+\)[sd]',      # %(name)s (Python)
-    r'%[0-9]*\$[sd]',               # %1$s (positional printf)
+    r'%[0-9]+\$[sd]',               # %1$s (positional printf)
     r'\{[0-9]+\}',                   # {0}, {1} (indexed)
 ]
 
@@ -120,7 +120,7 @@ def get_placeholder_format(placeholder: str) -> str | None:
         (r'^%[sd]$', 'printf'),
         (r'^\$\{[a-zA-Z0-9_]+\}$', 'shell_style'),
         (r'^%\([a-zA-Z0-9_]+\)[sd]$', 'python_style'),
-        (r'^%[0-9]*\$[sd]$', 'positional_printf'),
+        (r'^%[0-9]+\$[sd]$', 'positional_printf'),
         (r'^\{[0-9]+\}$', 'indexed'),
     ]
 

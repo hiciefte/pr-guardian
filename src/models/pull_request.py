@@ -52,7 +52,11 @@ class TranslationPullRequest(BaseModel):
     def validate_url(cls, v: str) -> str:
         """Validate GitHub PR URL format."""
         if not v.startswith("https://github.com/"):
-            raise ValueError(f"Invalid GitHub PR URL: {v}")
+            raise ValueError("Invalid GitHub PR URL")
+        parts = v.split("/")
+        # Expect: https://github.com/owner/repo/pull/number
+        if len(parts) < 7 or parts[5] != "pull":
+            raise ValueError("Invalid GitHub PR URL")
         return v
 
     @property

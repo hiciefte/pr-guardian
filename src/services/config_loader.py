@@ -63,7 +63,7 @@ def load_config(config_path: Path) -> PRGuardianConfiguration:
         with open(config_path, "r", encoding="utf-8") as f:
             raw_config = yaml.safe_load(f)
     except yaml.YAMLError as e:
-        raise ConfigurationError(f"Invalid YAML in configuration file: {e}")
+        raise ConfigurationError(f"Invalid YAML in configuration file: {e}") from e
 
     if raw_config is None:
         raise ConfigurationError("Configuration file is empty")
@@ -86,8 +86,8 @@ def load_config(config_path: Path) -> PRGuardianConfiguration:
             msg = error["msg"]
             error_messages.append(f"  {loc}: {msg}")
         raise ConfigurationError(
-            f"Configuration validation failed:\n" + "\n".join(error_messages)
-        )
+            "Configuration validation failed:\n" + "\n".join(error_messages)
+        ) from e
 
     # Validate environment variables are accessible
     _validate_environment_tokens(config)

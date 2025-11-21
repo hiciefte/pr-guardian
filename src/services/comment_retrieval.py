@@ -66,8 +66,13 @@ def retrieve_coderabbit_comments(
             repo=repo,
             pr_number=pr.number,
         )
-    except Exception as e:
-        logger.error(f"Failed to retrieve comments: {e}")
+    except Exception:
+        logger.exception(
+            "Failed to retrieve comments for %s/%s PR #%s",
+            owner,
+            repo,
+            pr.number,
+        )
         return []
 
     coderabbit_comments: list[ReviewComment] = []
@@ -228,9 +233,9 @@ def _convert_to_model(comment_data: dict) -> ReviewComment | None:
             conventional_label=conventional_label,
         )
 
-    except Exception as e:
-        logger.warning(
-            f"Failed to convert comment {comment_data.get('id')}: {e}"
+    except (KeyError, TypeError, ValueError):
+        logger.exception(
+            "Failed to convert comment %s", comment_data.get("id")
         )
         return None
 

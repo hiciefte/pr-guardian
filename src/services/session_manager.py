@@ -257,13 +257,12 @@ def _process_pr(
         return True
 
     # Apply changes
+    git_ops = GitOperations(
+        pr.owner,
+        pr.repo_name,
+        github_client.token,
+    )
     try:
-        git_ops = GitOperations(
-            pr.owner,
-            pr.repo_name,
-            github_client.token,
-        )
-
         # Clone repository
         work_dir = git_ops.clone_pr_branch(pr.number, pr.head_ref)
 
@@ -304,9 +303,6 @@ def _process_pr(
             summary,
         )
 
-        # Cleanup
-        git_ops.cleanup()
-
         return True
 
     except GitOperationError as e:
@@ -317,6 +313,11 @@ def _process_pr(
         logger.error(f"Failed to apply changes for PR #{pr.number}: {e}")
         report.add_error(f"Change application failed for PR #{pr.number}: {e}")
         return True
+    finally:
+        try:
+            git_ops.cleanup()
+        except Exception:
+            logger.warning("Failed to cleanup git workspace", exc_info=True)
 
 
 def _build_summary_comment(changes, commit_hash: str) -> str:

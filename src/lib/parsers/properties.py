@@ -32,12 +32,13 @@ def parse_properties_file(file_path: Path | str) -> dict[str, str]:
         raise FileNotFoundError(f"Properties file not found: {file_path}")
 
     try:
-        with open(file_path, "r", encoding="utf-8") as f:
-            return load(f)
-    except UnicodeDecodeError:
-        # Fallback to Latin-1 (Java default for .properties)
-        with open(file_path, "r", encoding="latin-1") as f:
-            return load(f)
+        try:
+            with open(file_path, "r", encoding="utf-8") as f:
+                return load(f)
+        except UnicodeDecodeError:
+            # Fallback to Latin-1 (Java default for .properties)
+            with open(file_path, "r", encoding="latin-1") as f:
+                return load(f)
     except Exception as e:
         raise ValueError(f"Failed to parse properties file: {e}") from e
 

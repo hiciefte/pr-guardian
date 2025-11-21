@@ -76,7 +76,8 @@ def show(config_path: Path, raw: bool) -> None:
                 click.echo(f.read())
         else:
             config = load_config(config_path)
-            click.echo(yaml.dump(config.model_dump(), default_flow_style=False, sort_keys=False))
+            rendered = config.model_dump(mode="json")
+            click.echo(yaml.dump(rendered, default_flow_style=False, sort_keys=False))
     except ConfigurationError as e:
         click.echo(click.style(f"Configuration error: {e}", fg="red"))
         sys.exit(1)

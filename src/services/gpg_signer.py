@@ -94,7 +94,7 @@ class GPGSigner:
             for file_path in files:
                 full_path = self.repo_path / file_path
                 if not full_path.exists():
-                    logger.warning(f"File not found: {file_path}")
+                    logger.warning(f"File not found, skipping: {file_path}")
                     continue
 
                 content = full_path.read_text()
@@ -115,6 +115,11 @@ class GPGSigner:
                     "type": "blob",
                     "sha": blob_data["sha"],
                 })
+
+            # Check if any files were found
+            if not tree_items and files:
+                logger.error("No valid files found for commit")
+                raise GPGSigningError("No valid files to commit")
 
             # Create tree
             tree_json = json.dumps(tree_items)
@@ -248,8 +253,8 @@ class GPGSigner:
             )
             return False
 
-        except Exception as e:
-            logger.error(f"Verification error: {e}")
+        except Exception:
+            logger.exception("Verification error")
             return False
 
     def get_signature_info(self, commit_sha: str) -> dict | None:
@@ -296,8 +301,8 @@ class GPGSigner:
                 "key_id": parts[2] if parts[2] else None,
             }
 
-        except Exception as e:
-            logger.error(f"Failed to get signature info: {e}")
+        except Exception:
+            logger.exception("Failed to get signature info")
             return None
 
     def is_gpg_available(self) -> bool:
@@ -365,8 +370,8 @@ class GPGSigner:
 
             return keys
 
-        except Exception as e:
-            logger.error(f"Failed to list GPG keys: {e}")
+        except Exception:
+            logger.exception("Failed to list GPG keys")
             return []
 
     def import_key(self, key_data: str) -> bool:
@@ -394,8 +399,8 @@ class GPGSigner:
             logger.error(f"GPG import failed: {result.stderr}")
             return False
 
-        except Exception as e:
-            logger.error(f"Failed to import GPG key: {e}")
+        except Exception:
+            logger.exception("Failed to import GPG key")
             return False
 
 

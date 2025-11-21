@@ -169,7 +169,7 @@ class IssueCreator:
         )
 
         if critical_count > 0:
-            prefix = f"[CRITICAL] "
+            prefix = "[CRITICAL] "
         else:
             prefix = ""
 

@@ -111,7 +111,7 @@ class CommitRecord(BaseModel):
         if len(subject) > 50:
             errors.append(f"Subject exceeds 50 characters (has {len(subject)})")
         if len(subject) > 72:
-            errors.append(f"Subject exceeds 72 character hard limit")
+            errors.append("Subject exceeds 72 character hard limit")
 
         # Rule 3: Capitalize
         if subject and not subject[0].isupper():

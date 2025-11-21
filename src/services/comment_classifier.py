@@ -31,7 +31,9 @@ def pre_classify_comment(comment: ReviewComment) -> CommentClassification:
     body_lower = comment.body.lower()
 
     # Question classification
-    if label == "question" or ("?" in comment.body and "suggest" not in body_lower):
+    if label == "question" or (
+        "?" in comment.body and "suggest" not in body_lower
+    ):
         return CommentClassification(
             comment_id=comment.id,
             type=ClassificationType.QUESTION,
