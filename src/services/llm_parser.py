@@ -142,7 +142,7 @@ class LLMParser:
     def __init__(
         self,
         api_key: str | None = None,
-        model: str = "claude-3-haiku-20240307",
+        model: str = "claude-3-5-haiku-20241022",
         max_tokens: int = 500,
         confidence_threshold: float = 0.80,
         max_retries: int = 3,

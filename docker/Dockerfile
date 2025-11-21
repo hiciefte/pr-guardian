@@ -16,7 +16,6 @@ RUN apk add --no-cache \
     openssh-client \
     gnupg \
     github-cli \
-    curl \
     tzdata
 
 # Create app directory

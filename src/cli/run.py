@@ -1,5 +1,6 @@
 """Run command for PR Guardian CLI."""
 
+import asyncio
 import signal
 import sys
 import logging
@@ -99,7 +100,7 @@ def run(ctx: click.Context, config_path: Path, dry_run: bool, verbose: bool) -> 
         timeout_seconds = config.execution.timeout_seconds
 
         with TimeoutHandler(timeout_seconds):
-            report = execute_session(config, dry_run=dry_run)
+            report = asyncio.run(execute_session(config, dry_run=dry_run))
 
         # Log session summary
         _log_session_summary(report)

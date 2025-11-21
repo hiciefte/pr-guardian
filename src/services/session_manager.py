@@ -12,6 +12,8 @@ from src.models import (
     SessionReport,
     ClassificationType,
     ImplementationDecision,
+    TranslationChange,
+    ChangeType,
 )
 from .comment_classifier import pre_classify_comment
 from .comment_retrieval import retrieve_coderabbit_comments
@@ -38,7 +40,7 @@ class SessionError(Exception):
     pass
 
 
-def execute_session(
+async def execute_session(
     config: PRGuardianConfiguration,
     dry_run: bool = False,
 ) -> SessionReport:
@@ -116,7 +118,7 @@ def execute_session(
         logger.info("Phase 2: Processing PRs")
         for pr in all_prs:
             try:
-                processed = _process_pr(
+                processed = await _process_pr(
                     pr,
                     config,
                     github_client,
@@ -177,7 +179,7 @@ def _initialize_llm_parser(config: PRGuardianConfiguration) -> Optional[LLMParse
     )
 
 
-def _process_pr(
+async def _process_pr(
     pr,
     config: PRGuardianConfiguration,
     github_client: GitHubClient,
@@ -223,18 +225,30 @@ def _process_pr(
         # Parse with LLM if available
         if llm_parser:
             try:
-                extraction = llm_parser.parse_comment(comment)
+                extraction = await llm_parser.parse_comment(comment)
+
+                if extraction is None:
+                    continue
 
                 # Update LLM stats
                 report.llm_stats.requests += 1
-                report.llm_stats.tokens_in += extraction.tokens_in if hasattr(extraction, 'tokens_in') else 0
-                report.llm_stats.tokens_out += extraction.tokens_out if hasattr(extraction, 'tokens_out') else 0
 
                 # Check if we should implement
-                if extraction.decision == ImplementationDecision.IMPLEMENT:
-                    for change in extraction.suggested_changes:
-                        changes_to_apply.append((comment, change))
-                elif extraction.decision == ImplementationDecision.HUMAN_REVIEW:
+                if extraction.implementation_decision == ImplementationDecision.IMPLEMENT:
+                    # Convert extraction to change
+                    change = TranslationChange(
+                        file_path=comment.file_path or "",
+                        translation_key=extraction.translation_key,
+                        original_value=extraction.original_value,
+                        new_value=extraction.new_value,
+                        locale=extraction.locale,
+                        change_type=ChangeType.FIX,
+                        comment_id=extraction.comment_id,
+                        line_start=comment.line,
+                        line_end=comment.line,
+                    )
+                    changes_to_apply.append((comment, change))
+                elif extraction.implementation_decision == ImplementationDecision.HUMAN_REVIEW:
                     logger.info(
                         f"Comment requires human review: {comment.id} "
                         f"(confidence: {extraction.confidence})"

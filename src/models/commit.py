@@ -83,7 +83,7 @@ class CommitRecord(BaseModel):
         """Check if commit follows conventional rules."""
         subject = self.subject
 
-        # Rule 2: Subject <= 72 chars (hard limit)
+        # Rule 2: Subject <= 50 chars (soft limit) or <= 72 chars (hard limit)
         if len(subject) > 72:
             return False
 
@@ -103,7 +103,7 @@ class CommitRecord(BaseModel):
         return True
 
     def validate_conventional_rules(self) -> tuple[bool, list[str]]:
-        """Validate all 7 conventional commit rules."""
+        """Validate conventional commit rules (subject, body formatting)."""
         errors = []
         subject = self.subject
 

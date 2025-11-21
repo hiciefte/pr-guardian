@@ -31,7 +31,7 @@ class TranslationExtraction(BaseModel):
         description="Extraction timestamp (UTC)",
     )
     llm_model: str = Field(
-        default="claude-3-haiku-20240307", description="LLM model used"
+        default="claude-3-5-haiku-20241022", description="LLM model used"
     )
     implementation_decision: Optional[ImplementationDecision] = Field(
         default=None, description="Auto-decision based on confidence"

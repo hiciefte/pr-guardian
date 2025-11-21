@@ -113,7 +113,7 @@ class LLMSettings(BaseModel):
         description="Environment variable for Anthropic API key",
     )
     model: str = Field(
-        default="claude-3-haiku-20240307",
+        default="claude-3-5-haiku-20241022",
         description="LLM model for comment parsing",
     )
     max_tokens: int = Field(

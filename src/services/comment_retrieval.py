@@ -2,7 +2,7 @@
 
 import logging
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 
 from src.models import ReviewComment, TranslationPullRequest
 from src.services.github_client import GitHubClient
@@ -189,7 +189,7 @@ def _convert_to_model(comment_data: dict) -> ReviewComment | None:
                 created_str.replace("Z", "+00:00")
             )
         else:
-            created_at = datetime.utcnow()
+            created_at = datetime.now(timezone.utc)
 
         # Get author
         user = comment_data.get("user", {})

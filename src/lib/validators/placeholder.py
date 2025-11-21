@@ -159,7 +159,16 @@ def normalize_placeholders(
 
     # Example: Convert {name} to {0}, {count} to {1}
     if source_format == 'curly_brace' and target_format == 'indexed':
-        placeholders = sorted(set(extract_placeholders(text)))
+        # Get placeholders in order of first appearance
+        seen: set[str] = set()
+        placeholders: list[str] = []
+        for pattern in PLACEHOLDER_PATTERNS:
+            for match in re.finditer(pattern, text):
+                ph = match.group()
+                if ph not in seen:
+                    seen.add(ph)
+                    placeholders.append(ph)
+
         result = text
         for i, ph in enumerate(placeholders):
             # Replace all occurrences of each placeholder
