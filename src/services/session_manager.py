@@ -13,7 +13,7 @@ from src.models import (
     ClassificationType,
     ImplementationDecision,
 )
-from .comment_classifier import classify_comment
+from .comment_classifier import pre_classify_comment
 from .comment_retrieval import retrieve_coderabbit_comments
 from .commit_builder import build_batch_commit_message
 from .git_operations import GitOperations, GitOperationError
@@ -209,12 +209,12 @@ def _process_pr(
     changes_to_apply = []
 
     for comment in comments:
-        # Classify comment
-        classification = classify_comment(comment)
-        report.increment_comments(classification.classification_type.value)
+        # Pre-classify comment to skip non-actionable ones
+        classification = pre_classify_comment(comment)
+        report.increment_comments(classification.type.value)
 
         # Skip non-actionable comments
-        if classification.classification_type not in [
+        if classification.type not in [
             ClassificationType.CRITICAL,
             ClassificationType.CONSTRUCTIVE,
         ]:

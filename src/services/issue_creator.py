@@ -261,8 +261,9 @@ class IssueCreator:
                     recommendations.append((rec, pattern.severity))
 
         # Sort by severity
+        severity_order = {"critical": 0, "moderate": 1, "minor": 2}
         recommendations.sort(
-            key=lambda x: {"critical": 0, "moderate": 1, "minor": 2}[x[1].value]
+            key=lambda x: severity_order.get(x[1].value, 3)
         )
 
         lines = ["### Recommendations\n"]

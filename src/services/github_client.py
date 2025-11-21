@@ -175,14 +175,13 @@ class GitHubClient:
         Raises:
             GitHubAPIError: On authentication failure
         """
-        result = self._run_gh_command(["auth", "status", "--show-token"])
+        result = self._run_gh_command(["auth", "status"])
 
         # Parse output to extract status info
         output = result.stdout + result.stderr
 
         return {
             "authenticated": "Logged in" in output,
-            "output": output.strip(),
         }
 
     @retry_with_backoff(max_attempts=5)

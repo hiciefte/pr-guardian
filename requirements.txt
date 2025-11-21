@@ -10,6 +10,7 @@ javaproperties>=0.8.2
 jsonschema>=4.25.0
 charset-normalizer>=3.4.0
 requests>=2.31.0
+httpx>=0.25.0
 
 # Development dependencies
 pytest>=8.0.0

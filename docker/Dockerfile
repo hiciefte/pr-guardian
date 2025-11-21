@@ -44,8 +44,8 @@ RUN chmod +x /entrypoint.sh
 # RUN adduser -D -u 1000 prguardian && chown -R prguardian:prguardian /app
 # USER prguardian
 
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+# Health check - increased start-period to allow for initialization
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
     CMD gh auth status || exit 1
 
 # Set entrypoint

@@ -159,10 +159,11 @@ def normalize_placeholders(
 
     # Example: Convert {name} to {0}, {count} to {1}
     if source_format == 'curly_brace' and target_format == 'indexed':
-        placeholders = sorted(extract_placeholders(text))
+        placeholders = sorted(set(extract_placeholders(text)))
         result = text
         for i, ph in enumerate(placeholders):
-            result = result.replace(ph, f'{{{i}}}', 1)
+            # Replace all occurrences of each placeholder
+            result = result.replace(ph, f'{{{i}}}')
         return result
 
     # Unsupported conversion

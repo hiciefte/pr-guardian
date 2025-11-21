@@ -111,10 +111,10 @@ def run(ctx: click.Context, config_path: Path, dry_run: bool, verbose: bool) -> 
             logger.info("Session completed successfully")
 
     except ConfigurationError as e:
-        logger.error(f"Configuration error: {e}")
+        logger.exception(f"Configuration error: {e}")
         exit_code = 1
     except SessionTimeoutError as e:
-        logger.error(f"Session timeout: {e}")
+        logger.exception(f"Session timeout: {e}")
         exit_code = 1
     except KeyboardInterrupt:
         logger.warning("Session interrupted by user")

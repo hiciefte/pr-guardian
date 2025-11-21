@@ -13,6 +13,84 @@ from src.models import (
 
 logger = logging.getLogger(__name__)
 
+
+def pre_classify_comment(comment: ReviewComment) -> CommentClassification:
+    """
+    Pre-classify a comment without extraction to determine if it's actionable.
+
+    Used before LLM parsing to skip obviously non-actionable comments.
+
+    Args:
+        comment: Original review comment
+
+    Returns:
+        CommentClassification with basic classification
+    """
+    # Check conventional label from CodeRabbitAI
+    label = (comment.conventional_label or "").lower()
+    body_lower = comment.body.lower()
+
+    # Question classification
+    if label == "question" or ("?" in comment.body and "suggest" not in body_lower):
+        return CommentClassification(
+            comment_id=comment.id,
+            type=ClassificationType.QUESTION,
+            priority=3,
+            should_implement=False,
+            confidence=1.0,
+            reasoning="Question - no implementation needed",
+            skip_reason="Question - no implementation needed",
+        )
+
+    # Praise classification
+    praise_words = ["good", "great", "excellent", "well done", "nice"]
+    if label == "praise" or any(word in body_lower for word in praise_words):
+        if "but" not in body_lower and "however" not in body_lower:
+            return CommentClassification(
+                comment_id=comment.id,
+                type=ClassificationType.PRAISE,
+                priority=3,
+                should_implement=False,
+                confidence=1.0,
+                reasoning="Praise - no implementation needed",
+                skip_reason="Praise - no implementation needed",
+            )
+
+    # Critical indicators
+    critical_keywords = ["error", "bug", "broken", "wrong", "incorrect", "critical"]
+    if label == "critical" or any(kw in body_lower for kw in critical_keywords):
+        return CommentClassification(
+            comment_id=comment.id,
+            type=ClassificationType.CRITICAL,
+            priority=1,
+            should_implement=True,
+            confidence=0.8,
+            reasoning="Critical issue - requires attention",
+        )
+
+    # Nitpick classification
+    nitpick_indicators = ["nitpick", "typo", "minor", "small", "trivial"]
+    if label in nitpick_indicators or any(ind in body_lower for ind in nitpick_indicators):
+        return CommentClassification(
+            comment_id=comment.id,
+            type=ClassificationType.NITPICK,
+            priority=3,
+            should_implement=True,
+            confidence=0.7,
+            reasoning="Minor improvement suggestion",
+        )
+
+    # Default to Constructive
+    return CommentClassification(
+        comment_id=comment.id,
+        type=ClassificationType.CONSTRUCTIVE,
+        priority=2,
+        should_implement=True,
+        confidence=0.8,
+        reasoning="Constructive suggestion",
+    )
+
+
 # Pattern tags for comment categorization
 PATTERN_TAGS = {
     "terminology": [

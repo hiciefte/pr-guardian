@@ -38,11 +38,9 @@ def post_pr_summary(
     Raises:
         GitHubAPIError: On comment posting failure
     """
-    # Extract owner and repo from PR URL
-    # URL format: https://github.com/owner/repo/pull/number
-    url_parts = pr.url.split("/")
-    owner = url_parts[3]
-    repo = url_parts[4]
+    # Use owner and repo_name from PR model
+    owner = pr.owner
+    repo = pr.repo_name
 
     # Generate summary comment
     comment_body = format_summary_comment(classifications, commit_results)

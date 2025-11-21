@@ -112,5 +112,5 @@ def validate_yaml_syntax(file_path: Path | str) -> tuple[bool, str]:
                 f"column {mark.column + 1}: {e.problem}"
             )
         return False, f"YAML syntax error: {e}"
-    except Exception as e:
-        return False, f"Unexpected error: {e}"
+    except (TypeError, ValueError) as e:
+        return False, f"Validation error: {e}"

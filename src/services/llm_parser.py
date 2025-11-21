@@ -196,7 +196,7 @@ class LLMParser:
             try:
                 response = await self.client.messages.create(
                     model=self.model,
-                    max_tokens=1024,
+                    max_tokens=self.max_tokens,
                     system=EXTRACTION_SYSTEM_PROMPT,
                     tools=[EXTRACTION_TOOL],
                     tool_choice={"type": "tool", "name": "extract_translation_change"},
