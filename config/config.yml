@@ -1,0 +1,54 @@
+# PR Guardian Configuration
+
+# GitHub Settings
+github:
+  token_env: GH_TOKEN
+  target_username: hiciefte  # GitHub username that creates translation PRs
+
+# Monitored Repositories
+repositories:
+  - owner: bisq-network
+    repository: bisq2
+    branch_filter: main
+    enabled: true
+  - owner: bisq-network
+    repository: bisq-mobile
+    branch_filter: main
+    enabled: true
+
+# Feedback Repository (for issue creation with improvement recommendations)
+feedback:
+  repository: hiciefte/translate-java-property-files
+  enabled: true
+
+# Execution Settings
+execution:
+  max_comments_per_pr: 50
+  timeout_seconds: 1800
+  schedule: "0 2 * * *"
+
+# LLM Settings
+llm:
+  model: claude-3-haiku-20240307
+  max_tokens: 500
+  confidence_threshold: 0.80
+  max_concurrency: 10
+
+# Signing Configuration
+signing:
+  method: gpg
+  gpg_key_path: /secrets/gpg_bot_key
+  deploy_key_path: /root/.ssh/id_ed25519
+
+# Translation File Patterns
+translation_patterns:
+  - "*.properties"
+  - "**/i18n/**/*.json"
+  - "**/locales/**/*.yml"
+  - "**/locales/**/*.yaml"
+  - "**/lang/**/*"
+
+# Logging Settings
+logging:
+  level: INFO
+  format: structured
