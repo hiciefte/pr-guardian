@@ -1,0 +1,62 @@
+# PR Guardian Configuration
+# Copy to config/config.yml and customize
+
+# GitHub Settings
+github:
+  token_env: GH_TOKEN  # Environment variable name for GitHub token
+  target_username: translation-bot  # GitHub username to monitor for PRs
+
+# Monitored Repositories
+repositories:
+  - owner: your-org
+    repository: your-repo
+    branch_filter: main  # Only PRs targeting this branch
+    enabled: true
+    # Optional: Override translation patterns for this repo
+    # translation_patterns:
+    #   - "*.properties"
+    #   - "**/i18n/**/*.json"
+
+  # Add more repositories as needed
+  # - owner: another-org
+  #   repository: another-repo
+  #   branch_filter: develop
+  #   enabled: true
+
+# Feedback Repository (for issue creation with improvement recommendations)
+feedback:
+  repository: your-org/translation-automation
+  enabled: true
+
+# Execution Settings
+execution:
+  max_comments_per_pr: 50  # Maximum comments to process per PR
+  timeout_seconds: 1800    # 30 minutes execution timeout
+  schedule: "0 2 * * *"    # Cron schedule (daily at 02:00 UTC)
+
+# LLM Settings (Anthropic Claude for comment parsing)
+llm:
+  model: claude-3-haiku-20240307
+  max_tokens: 500
+  confidence_threshold: 0.80  # Auto-implement if confidence >= this
+  max_concurrency: 10         # Parallel LLM requests
+
+# Signing Configuration
+signing:
+  method: web-flow  # Options: web-flow, gpg
+  # GPG settings (only if method=gpg)
+  # gpg_key_path: /secrets/gpg_bot_key
+  deploy_key_path: /root/.ssh/id_ed25519
+
+# Translation File Patterns (glob patterns to identify translation files)
+translation_patterns:
+  - "*.properties"
+  - "**/i18n/**/*.json"
+  - "**/locales/**/*.yml"
+  - "**/locales/**/*.yaml"
+  - "**/lang/**/*"
+
+# Logging Settings
+logging:
+  level: INFO  # DEBUG, INFO, WARNING, ERROR
+  format: structured  # structured (JSON) or simple

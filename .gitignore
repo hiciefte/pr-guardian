@@ -1,0 +1,13 @@
+/secrets/
+config/.env
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+dist/
+build/
+/.idea/
+/.claude/
+/CLAUDE.md

@@ -1,0 +1,62 @@
+services:
+  pr-guardian:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: pr-guardian
+    volumes:
+      - ../secrets/deploy_key/id_ed25519:/root/.ssh/id_ed25519:ro
+      - ../secrets/gpg_bot_key/bot_secret_key.asc:/secrets/gpg_bot_key:ro
+      - ../config/config.yml:/app/config/config.yml:ro
+    env_file:
+      - ../config/.env
+    environment:
+      - TZ=UTC
+      - SIGNING_METHOD=${SIGNING_METHOD:-web-flow}
+      # Redis connection for semantic caching
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_ENABLED=${REDIS_ENABLED:-true}
+    depends_on:
+      redis:
+        condition: service_healthy
+    labels:
+      # Ofelia scheduler configuration
+      ofelia.enabled: "true"
+      ofelia.job-exec.pr-guardian-daily.schedule: "0 2 * * *"
+      ofelia.job-exec.pr-guardian-daily.command: "python -m src.cli.main run"
+      ofelia.job-exec.pr-guardian-daily.no-overlap: "true"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  # Redis cache for LLM semantic caching
+  redis:
+    image: redis:7-alpine
+    container_name: pr-guardian-redis
+    command: redis-server --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis-data:/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+
+  # Ofelia scheduler for Docker-based scheduling
+  ofelia:
+    image: mcuadros/ofelia:latest
+    container_name: ofelia-scheduler
+    depends_on:
+      - pr-guardian
+    command: daemon --docker
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    restart: unless-stopped
+
+volumes:
+  redis-data:
+    driver: local
