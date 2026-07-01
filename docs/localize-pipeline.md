@@ -12,14 +12,13 @@ PR Guardian is configured with a Java `.properties` suffix layout under
 - `glossary.json` contains project-specific term guidance.
 - `.github/workflows/translate.yml` runs the pipeline from GitHub Actions.
 
-The initial integration fixture uses `model_provider: openai_compatible` so
-GitHub Actions calls OpenAI through the direct SDK adapter. The default AISuite
-adapter can be re-enabled after the hosted-runner connectivity behavior has
-been verified for this repository.
+The workflow includes a small OpenAI `/v1/models` connectivity probe before the
+translation action. This keeps missing secrets or hosted-runner network issues
+separate from translation failures in the action logs.
 
 ## First Run
 
-The workflow is pinned to `bisq-network/localize-pipeline@v0.1.0`. It runs
+The workflow is pinned to `bisq-network/localize-pipeline@v0.1.1`. It runs
 with `process-all-files: true` for the initial backfill and opens a translation
 pull request from `localize/pr-guardian-ai-translations`.
 

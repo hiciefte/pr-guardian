@@ -43,7 +43,7 @@ jobs:
           fi
           echo "OpenAI connectivity OK (HTTP ${status})."
 
-      - uses: bisq-network/localize-pipeline@v0.1.0
+      - uses: bisq-network/localize-pipeline@v0.1.1
         with:
           config-file: config.yaml
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
