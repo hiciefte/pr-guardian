@@ -22,6 +22,7 @@ jobs:
         with:
           config-file: config.yaml
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          review-model: gpt-4o-mini
           process-all-files: true
           dry-run: false
           pr-branch: localize/pr-guardian-ai-translations

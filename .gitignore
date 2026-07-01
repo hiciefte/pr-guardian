@@ -12,3 +12,4 @@ build/
 /.claude/
 /CLAUDE.md
 /logs/
+/src/main/resources/archive/
