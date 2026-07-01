@@ -14,10 +14,9 @@ PR Guardian is configured with a Java `.properties` suffix layout under
 
 ## First Run
 
-The workflow is intentionally pinned to a concrete Localize Pipeline commit
-because no release tag exists yet. It runs with `process-all-files: true` for
-the initial backfill and opens a translation pull request from
-`localize/pr-guardian-ai-translations`.
+The workflow is pinned to `bisq-network/localize-pipeline@v0.1.0`. It runs
+with `process-all-files: true` for the initial backfill and opens a translation
+pull request from `localize/pr-guardian-ai-translations`.
 
 After the first translation PR is reviewed and merged, change the workflow to
 run on the default branch and remove `process-all-files: true` for normal

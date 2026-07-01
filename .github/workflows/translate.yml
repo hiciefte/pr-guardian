@@ -18,7 +18,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: bisq-network/localize-pipeline@4d1e6eb473a7fcd5b0edfca95363e8206e7ff0eb
+      - uses: bisq-network/localize-pipeline@v0.1.0
         with:
           config-file: config.yaml
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
