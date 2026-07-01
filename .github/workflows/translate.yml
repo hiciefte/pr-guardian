@@ -1,0 +1,29 @@
+name: Translate
+
+on:
+  push:
+    branches:
+      - localize/pr-guardian-integration
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  translate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: bisq-network/localize-pipeline@4d1e6eb473a7fcd5b0edfca95363e8206e7ff0eb
+        with:
+          config-file: config.yaml
+          openai-api-key: ${{ secrets.OPENAI_API_KEY }}
+          process-all-files: true
+          dry-run: false
+          pr-branch: localize/pr-guardian-ai-translations
+          pr-title: "Update PR Guardian translations"
+          commit-message: "Update PR Guardian translations"

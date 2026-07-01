@@ -1,0 +1,20 @@
+{
+  "de": {
+    "review": "Pruefung",
+    "settings": "Einstellungen",
+    "repository": "Repository",
+    "pull request": "Pull Request"
+  },
+  "es": {
+    "review": "revision",
+    "settings": "ajustes",
+    "repository": "repositorio",
+    "pull request": "pull request"
+  },
+  "fr": {
+    "review": "revue",
+    "settings": "parametres",
+    "repository": "depot",
+    "pull request": "pull request"
+  }
+}

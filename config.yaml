@@ -1,0 +1,59 @@
+# Localize Pipeline configuration for PR Guardian.
+target_project_root: "."
+input_folder: "src/main/resources"
+translation_source: "git"
+localization_format: "java_properties"
+localization_layout:
+  id: "suffix"
+  source_locale: "en"
+
+project_context: >
+  Translate concise UI and operational text for PR Guardian, an autonomous agent
+  that monitors translation pull requests, reads CodeRabbitAI review comments,
+  applies safe localization fixes, creates signed commits, and reports feedback
+  patterns to maintainers.
+
+model_provider: "aisuite"
+model_name: "gpt-4o-mini"
+review_model_name: "gpt-4o-mini"
+max_concurrent_api_calls: 1
+
+glossary_file_path: "glossary.json"
+brand_technical_glossary:
+  - PR Guardian
+  - CodeRabbitAI
+  - GitHub
+  - Claude
+  - Docker
+  - GPG
+  - JSON
+  - YAML
+
+dry_run: false
+translation_memory_enabled: true
+translation_memory_file_path: "logs/translation_memory.json"
+translation_key_ledger_file_path: "logs/translation_key_ledger.json"
+translation_queue_folder: "pr_guardian_translation_queue"
+translated_queue_folder: "pr_guardian_translated_queue"
+
+supported_locales:
+  - code: "de"
+    name: "German"
+  - code: "es"
+    name: "Spanish"
+  - code: "fr"
+    name: "French"
+
+style_rules:
+  de:
+    - "Use formal, concise product UI wording."
+    - "Keep PR Guardian, CodeRabbitAI, GitHub, Docker, GPG, JSON, and YAML unchanged."
+    - "Preserve placeholders such as {0} and {1} exactly."
+  es:
+    - "Use neutral Spanish suitable for software maintainers."
+    - "Keep PR Guardian, CodeRabbitAI, GitHub, Docker, GPG, JSON, and YAML unchanged."
+    - "Preserve placeholders such as {0} and {1} exactly."
+  fr:
+    - "Use concise French suitable for developer tooling."
+    - "Keep PR Guardian, CodeRabbitAI, GitHub, Docker, GPG, JSON, and YAML unchanged."
+    - "Preserve placeholders such as {0} and {1} exactly."
